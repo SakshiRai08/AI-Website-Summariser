@@ -1,0 +1,24 @@
+from openai import OpenAI
+import os
+from dotenv import load_dotenv
+from scraper import fetch_website_contents
+
+load_dotenv()
+client = OpenAI(api_key=os.getenv("GROQ_API_KEY"),
+                base_url="https://api.groq.com/openai/v1")
+
+system_prompt = """You analyze the contents of a website and
+give a short, friendly summary. Ignore navigation menus.
+Respond in markdown."""
+
+def summarize_website(url):
+    website = fetch_website_contents(url)
+    website = website[:10000]  # Limit to first 10,000 characters
+    response = client.chat.completions.create(
+        model="openai/gpt-oss-20b",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Summarize the following website content:\n\n{website}"},
+        ],
+    )
+    return response.choices[0].message.content
