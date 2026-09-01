@@ -1,12 +1,19 @@
 import gradio as gr
+import os
+from scraper import fetch_website_contents
 from Summarizer import summarize_website
 
 def get_summary(url):
     if not url.strip():
         return "⚠️ Please enter a valid URL."
-    return summarize_website(url)
+    html = fetch_website_contents(url)
+    soup = BeautifulSoup(html, 'html.parser')
+    text = soup.get_text(separator=" ", strip=True)
+    text = text[:10000]
+    summary = summarize_website(text)
+    return summary
 
-with gr.Blocks(theme=gr.themes.Soft(), title="🔎 AI Website Summarizer") as app:
+with gr.Blocks(title="🔎 AI Website Summarizer") as app:
     gr.Markdown(
         """
         # 🌐 AI Website Summarizer
@@ -27,4 +34,4 @@ with gr.Blocks(theme=gr.themes.Soft(), title="🔎 AI Website Summarizer") as ap
             url_input.submit(fn=get_summary, inputs=url_input, outputs=output)
             gr.Markdown("---\n*Tip: Works best with articles, blogs, docs, and news sites*")
 
-            app.launch(share=True)
+app.launch(server_name="0.0.0.0", server_port=int(os.environ.get("PORT", 10000)), theme=gr.themes.Soft())
