@@ -1,5 +1,6 @@
 import gradio as gr
 import os
+from bs4 import BeautifulSoup
 from scraper import fetch_website_contents
 from Summarizer import summarize_website
 
