@@ -2,6 +2,7 @@ An AI agent that scrapes any website and gives you concise summary using Groq(op
 
 ### Demo
 Live: 'http://127.0.0.1:7860' (local)
+public: https://ai-website-summariser.onrender.com/
 
 ### Tech Stack
 - Python, BeautifulSoup, Requests
